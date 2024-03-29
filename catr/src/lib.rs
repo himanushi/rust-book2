@@ -23,11 +23,17 @@ pub fn get_args() -> MyResult<Config> {
         .arg(
             Arg::with_name("files")
                 .help("Files to read")
-                .default_value("-"),
+                .default_value("-")
+                .multiple(true),
         )
-        .arg(Arg::with_name("number_lines").short("n").takes_value(false))
         .arg(
-            Arg::with_name("number_nonblank_lines")
+            Arg::with_name("number")
+                .short("n")
+                .takes_value(false)
+                .conflicts_with("number_nonblank"),
+        )
+        .arg(
+            Arg::with_name("number_nonblank")
                 .short("b")
                 .takes_value(false),
         )
@@ -35,7 +41,7 @@ pub fn get_args() -> MyResult<Config> {
 
     Ok(Config {
         files: matches.values_of_lossy("files").unwrap(),
-        number_lines: matches.is_present("number_lines"),
-        number_nonblank_lines: matches.is_present("number_nonblank_lines"),
+        number_lines: matches.is_present("number"),
+        number_nonblank_lines: matches.is_present("number_nonblank"),
     })
 }
