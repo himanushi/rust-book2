@@ -16,7 +16,15 @@ type MyResult<T> = Result<T, Box<dyn Error>>;
 
 pub fn run(config: Config) -> MyResult<()> {
     for filename in config.files {
-        println!("{}", filename);
+        match open(&filename) {
+            Err(err) => eprintln!("Failed to open {} : {}", filename, err),
+            Ok(file) => {
+                for line_result in file.lines() {
+                    let line = line_result?;
+                    println!("{line}")
+                }
+            }
+        }
     }
     Ok(())
 }
